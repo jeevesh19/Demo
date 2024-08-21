@@ -20,7 +20,7 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
       with:
         registry-type: 'private'
-        aws-region: 'us-west-2'  # Specify your AWS region
+        aws-region: 'us-west-2'  
         mask-password: true
         skip-logout: false
 

@@ -3,8 +3,7 @@ name: Build and Push Docker image to ECR
 on:
   push:
     branches:
-      - main  # Trigger this workflow on pushes to the main branch
-
+      - main  
 jobs:
   build:
     runs-on: ubuntu-latest  # Use the latest Ubuntu runner
@@ -20,7 +19,7 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
       with:
         registry-type: 'private'
-        aws-region: 'us-west-2'  
+        aws-region: 'us-west-1'  
         mask-password: true
         skip-logout: false
 

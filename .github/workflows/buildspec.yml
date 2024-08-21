@@ -21,12 +21,12 @@ jobs:
       with:
         registry-type: 'private'
         registries: '<aws_account_id>.dkr.ecr.<region>.amazonaws.com'
-        mask-password: true
 
     - name: Build Docker image
       run: docker build -t <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<repository_name>:latest .
 
     - name: Push Docker image to ECR
       run: docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<repository_name>:latest
+
 
 

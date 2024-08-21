@@ -20,12 +20,13 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
       with:
         registry-type: 'private'
-        registry: '<410454990341>.dkr.ecr.<us-west-1>.amazonaws.com'
+        registries: '<aws_account_id>.dkr.ecr.<region>.amazonaws.com'
+        mask-password: true
 
     - name: Build Docker image
-      run: docker build -t <410454990341>.dkr.ecr.<us-west-1>.amazonaws.com/<express-app-02>:latest .
+      run: docker build -t <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<repository_name>:latest .
 
     - name: Push Docker image to ECR
-      run: 410454990341>.dkr.ecr.<us-west-1>.amazonaws.com/<express-app-02>:latest
+      run: docker push <aws_account_id>.dkr.ecr.<region>.amazonaws.com/<repository_name>:latest
 
 

@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies with verbose logging
+RUN npm install --verbose
 
 # Copy application code
 COPY . .
@@ -18,3 +18,4 @@ EXPOSE 3000
 
 # Command to run the application
 CMD ["npm", "start"]
+

@@ -19,9 +19,8 @@ jobs:
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
         with:
-          registry-type: 'public' # Use 'private' if using a private ECR registry
-          # If using a private registry, specify the AWS region
-          # aws-region: ${{ secrets.AWS_REGION }}
+          registry-type: 'private' # Use 'public' if using a public ECR registry
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Build Docker image
         run: |
@@ -38,8 +37,8 @@ jobs:
 
       - name: Verify Docker image in ECR
         run: |
-          # Replace this with your specific command or method to verify the image
           echo "Image pushed to ECR successfully."
+
 
 
 

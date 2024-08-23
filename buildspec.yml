@@ -1,40 +1,19 @@
-name: Build and Push Docker Image to ECR
+version: 0.2
 
-on:
-  push:
-    branches:
-      - main # Trigger the workflow on pushes to the main branch
-
-jobs:
+phases:
+  install:
+    runtime-versions:
+      docker: 18 # or the version you require
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region $AWS_REGION)
   build:
-    runs-on: ubuntu-latest
+    commands:
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:latest .
+  post_build:
+    commands:
+      - echo Pushing the Docker image...
+      - docker push $REPOSITORY_URI:latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v1
-        with:
-          registry-type: 'private' # Use 'public' if using a public ECR registry
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.ECR_REGISTRY }}/my-app:${{ github.sha }} .
-
-      - name: Tag Docker image
-        run: |
-          docker tag ${{ secrets.ECR_REGISTRY }}/my-app:${{ github.sha }} ${{ secrets.ECR_REGISTRY }}/my-app:latest
-
-      - name: Push Docker image to ECR
-        run: |
-          docker push ${{ secrets.ECR_REGISTRY }}/my-app:${{ github.sha }}
-          docker push ${{ secrets.ECR_REGISTRY }}/my-app:latest
-
-      - name: Verify Docker image in ECR
-        run: |
-          echo "Image pushed to ECR successfully."

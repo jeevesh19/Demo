@@ -19,11 +19,13 @@ jobs:
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          region: ${{ secrets.AWS_REGION }}  # Ensure AWS_REGION is set in GitHub Secrets
 
       - name: Build and push Docker image
         env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}  # Specify your AWS region
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}  # Specify your ECR registry URL
+          AWS_REGION: ${{ secrets.AWS_REGION }}  # Ensure AWS_REGION is set in GitHub Secrets
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}  # Ensure ECR_REGISTRY is set in GitHub Secrets
         run: |
           # Build the Docker image
           docker build -t $ECR_REGISTRY/my-app:${{ github.sha }} .
@@ -38,6 +40,7 @@ jobs:
       - name: Verify image is in ECR
         run: |
           aws ecr describe-images --repository-name my-app --region $AWS_REGION
+
 
 
 

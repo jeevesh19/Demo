@@ -22,9 +22,37 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e  # Exit immediately if a command exits with a non-zero status.
+            
+            # Check if the application directory exists
+            if [ ! -d "index.html" ]; then
+              echo "Directory index.html does not exist. Exiting."
+              exit 1
+            fi
+
             cd /path/to/your/app
-            git pull origin main  
-            npm install            
-            pm2 restart all     
+            
+            # Ensure the directory is a git repository
+            if [ ! -d ".git" ]; then
+              echo "Not a git repository. Exiting."
+              exit 1
+            fi
+
+            git pull origin main
+            
+            # Ensure npm and pm2 are installed
+            if ! command -v npm &> /dev/null; then
+              echo "npm command not found. Please install Node.js."
+              exit 1
+            fi
+
+            if ! command -v pm2 &> /dev/null; then
+              echo "pm2 command not found. Please install PM2."
+              exit 1
+            fi
+            
+            npm install
+            
+            pm2 restart all
           EOF
